@@ -1,0 +1,38 @@
+<!doctype html>
+<html>
+  <head>
+    <title>Getting Started Extension's Popup</title>
+    <style>
+      body {
+        min-width: 357px;
+        overflow-x: hidden;
+      }
+
+    </style>
+
+    <!--
+      - JavaScript and HTML must be in separate files: see our Content Security
+      - Policy documentation[1] for details and explanation.
+      -
+      - [1]: http://developer.chrome.com/extensions/contentSecurityPolicy.html
+     -->
+    <script src="popup.js"></script>
+  </head>
+  <body>
+    <form method="post" action="http://localhost/douban_crx_server/api.php">
+      <div class="form-control">
+        <input type="text" name="username" placeholder="用户名">
+      </div>
+      <div class="form-control">
+        <input type="password" name="password" placeholder="密码">
+      </div>
+      <div class="form-control">
+        <input type="text" name="captcha" placeholder="验证码">
+        <img src="http://localhost/douban_crx_server/api.php?act=captcha">
+      </div>
+      <button type="submit">登录</button>
+      <input type="hidden" name="act" value="login">
+    </form>
+  </body>
+</html>
+
