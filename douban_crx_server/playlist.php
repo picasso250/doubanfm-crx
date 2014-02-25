@@ -14,6 +14,43 @@ if ($ret['r'] != 0) {
     echo_json(1, $ret['err_msg']);
     exit();
 }
-var_dump($ret);
+
+// [9]=>
+//     array(17) {
+//       ["album"]=>
+//       string(17) "/subject/6384597/"
+//       ["picture"]=>
+//       string(40) "http://img5.douban.com/mpic/s6331148.jpg"
+//       ["ssid"]=>
+//       string(4) "78ae"
+//       ["artist"]=>
+//       string(6) "小皮"
+//       ["url"]=>
+//       string(96) "http://mr3.douban.com/201402251039/5711dd2534dd1edcd09b0e52ce020846/view/song/small/p2031477.mp3"
+//       ["company"]=>
+//       string(12) "时间音乐"
+//       ["title"]=>
+//       string(6) "生活"
+//       ["rating_avg"]=>
+//       float(4.02372)
+//       ["length"]=>
+//       int(306)
+//       ["subtype"]=>
+//       string(0) ""
+//       ["public_time"]=>
+//       string(4) "2011"
+//       ["sid"]=>
+//       string(7) "2031477"
+//       ["aid"]=>
+//       string(7) "6384597"
+//       ["sha256"]=>
+//       string(64) "c163110f0622f794c2a6daf671ea7a62b22517c7831ab0d4f1536e06db7f5c80"
+//       ["kbps"]=>
+//       string(2) "64"
+//       ["albumtitle"]=>
+//       string(27) "我们都是岁月的孩子"
+//       ["like"]=>
+//       bool(false)
+//     }
 
 echo json_encode(array('code' => 0, 'data' => $ret['song']));

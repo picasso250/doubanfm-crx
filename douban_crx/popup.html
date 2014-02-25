@@ -9,30 +9,37 @@
       }
 
     </style>
-
-    <!--
-      - JavaScript and HTML must be in separate files: see our Content Security
-      - Policy documentation[1] for details and explanation.
-      -
-      - [1]: http://developer.chrome.com/extensions/contentSecurityPolicy.html
-     -->
-    <script src="popup.js"></script>
   </head>
   <body>
-    <form method="post" action="http://localhost/douban_crx_server/api.php">
-      <div class="form-control">
-        <input type="text" name="username" placeholder="用户名">
+    <div class="page" id="loginPage">
+      <form method="post" action="http://localhost/douban_crx_server/api.php">
+        <div class="form-control">
+          <input type="text" name="username" placeholder="用户名">
+        </div>
+        <div class="form-control">
+          <input type="password" name="password" placeholder="密码">
+        </div>
+        <div class="form-control">
+          <input type="text" name="captcha_solution" placeholder="验证码">
+          <img src="http://localhost/douban_crx_server/api.php?act=captcha" id="captcha">
+        </div>
+        <button type="submit">登录</button>
+        <input type="hidden" name="act" value="login">
+      </form>
+    </div>
+
+    <div class="page" id="loginPage">
+      <div id="userInfo">
+        <span class="name"></span>
+        <span class="name"></span>
+        <span class="name"></span>
       </div>
-      <div class="form-control">
-        <input type="password" name="password" placeholder="密码">
+      <div id="player">
+        <audio></audio>
       </div>
-      <div class="form-control">
-        <input type="text" name="captcha" placeholder="验证码">
-        <img src="http://localhost/douban_crx_server/api.php?act=captcha">
-      </div>
-      <button type="submit">登录</button>
-      <input type="hidden" name="act" value="login">
-    </form>
+    </div>
+
+    <script src="popup.js"></script>
   </body>
 </html>
 
