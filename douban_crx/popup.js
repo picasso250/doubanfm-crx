@@ -1,3 +1,35 @@
+$ = {};
+$.ajax = function (url, settings) {
+  var xmlhttp = new XMLHttpRequest();
+  xmlhttp.onreadystatechange=function()
+  {
+    if (xmlhttp.readyState==4 && xmlhttp.status==200) {
+      var ret = (JSON.parse(xmlhttp.responseText));
+      var success = settings.success;
+      success(ret, xmlhttp.status, xmlhttp);
+    }
+  };
+  xmlhttp.open(settings.type,url,true);
+  if (settings.type == 'POST') {
+    xmlhttp.setRequestHeader("Content-type","application/x-www-form-urlencoded");
+  };
+  xmlhttp.send(settings.data);
+};
+$.get = function (url, data, success) {
+  $.ajax(url, {
+    type: 'GET',
+    data: data,
+    success: success
+  });
+};
+$.post = function(url, data, success) {
+  $.ajax(url, {
+    type: 'POST',
+    data: data,
+    success: success
+  });
+};
+
 document.addEventListener('DOMContentLoaded', function () {
   // console.log('ss');
   var form = (document.getElementsByTagName('form')[0]);
@@ -10,35 +42,45 @@ document.addEventListener('DOMContentLoaded', function () {
     var data = arr.join('&');
     console.log(data);
 
-    var xmlhttp = new XMLHttpRequest();
-    xmlhttp.onreadystatechange=function()
-    {
-      if (xmlhttp.readyState==4 && xmlhttp.status==200)
-      {
-        console.log(JSON.parse(xmlhttp.responseText));
-        var ret = (JSON.parse(xmlhttp.responseText));
-
-        document.getElementById('loginPage').style.display = 'none';
-        var userInfo = document.getElementById('userInfo');
-        var spans = userInfo.getElementsByTagName('span');
-        for (var i = 0; i < spans.length; i++) {
-          for (k in ret) {
-
-          }
-          if (spans[i].class == 'name');
-        };
-      }
-    }
-    xmlhttp.open("POST","http://localhost/douban_crx_server/api.php",true);
-    xmlhttp.setRequestHeader("Content-type","application/x-www-form-urlencoded");
-    xmlhttp.send(data);
+    $.post('http://localhost/douban_crx_server/api.php', data, function (ret) {
+      if (ret.code == 0) {
+          document.getElementById('loginPage').style.display = 'none';
+          var userInfo = document.getElementById('userInfo');
+          var spans = userInfo.getElementsByTagName('span');
+          var span;
+          for (var i = 0; i < spans.length; i++) {
+            span = spans[i];
+            if (spans[i].class == 'name') {
+              spans[i].innerHtml = ret.data.name;
+            } else if (span.class == 'liked') {
+              span.innerHtml = ret.data.play_record.liked;
+            } else if (span.class == 'played') {
+              span.innerHtml = ret.data.play_record.played;
+            }
+          };
+          $.get('http://localhost/douban_crx_server/api.php?act=playlist', {}, function (ret) {
+            console.log(ret);
+            if (ret.code == 0) {
+              var song = ret.data[0];
+              console.log(song);
+              console.log(song.artist);
+              var songImg = document.getElementById('songImg');
+              songImg.src = song.picture;
+              var playerAudio = document.getElementById('playerAudio');
+              playerAudio.src = song.url;
+            };
+          });
+        } else {
+          document.getElementById('formMsg').innerHtml(ret.msg);
+        }
+    });
   });
 
   var img = document.getElementById('captcha');
   img.addEventListener('click', function () {
-    img.src += '&t='+Date.now();
+    img.src = 'http://localhost/douban_crx_server/api.php?act=captcha&t='+Date.now();
   });
-  console.log(img);
+  // console.log(img);
 });
 document.addEventListener('click', function () {
   var img = document.getElementById('captcha')

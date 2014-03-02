@@ -22,11 +22,12 @@ $data = array(
 );
 
 $headers = array(
-    'Origin' => 'http://douban.fm',
+    'Origin: http://douban.fm',
 );
 
 list($code, $content) = $arr = odie_post($url, $data, $headers);
 if ($code != 200) {
+    error_log("post $url ".http_build_query($data)." $code $content");
     echo_json(1, "code $code");
     exit();
 }
