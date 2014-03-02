@@ -13,6 +13,13 @@ $.ajax = function (url, settings) {
   if (settings.type == 'POST') {
     xmlhttp.setRequestHeader("Content-type","application/x-www-form-urlencoded");
   };
+  if ((typeof settings.data) == 'object') {
+    var query = [];
+    for (key in settings.data) {
+      query.push(key+'='+settings.data[key]);
+    }
+    settings.data = query.join('&');
+  };
   xmlhttp.send(settings.data);
 };
 $.get = function (url, data, success) {
@@ -28,6 +35,26 @@ $.post = function(url, data, success) {
     data: data,
     success: success
   });
+};
+
+var playlist = function () {
+  $.get('http://localhost/douban_crx_server/api.php?act=playlist', {}, function (ret) {
+    console.log(ret);
+    if (ret.code == 0) {
+      var song = ret.data[0];
+      console.log(song);
+      console.log(song.artist);
+      var songImg = document.getElementById('songImg');
+      songImg.src = song.picture;
+      var playerAudio = document.getElementById('playerAudio');
+      playerAudio.src = song.url;
+    };
+  });
+};
+
+var img = document.getElementById('captcha');
+var changeImage = function () {
+  img.src = 'http://localhost/douban_crx_server/api.php?act=captcha&t='+Date.now();
 };
 
 document.addEventListener('DOMContentLoaded', function () {
@@ -58,32 +85,25 @@ document.addEventListener('DOMContentLoaded', function () {
               span.innerHtml = ret.data.play_record.played;
             }
           };
-          $.get('http://localhost/douban_crx_server/api.php?act=playlist', {}, function (ret) {
-            console.log(ret);
-            if (ret.code == 0) {
-              var song = ret.data[0];
-              console.log(song);
-              console.log(song.artist);
-              var songImg = document.getElementById('songImg');
-              songImg.src = song.picture;
-              var playerAudio = document.getElementById('playerAudio');
-              playerAudio.src = song.url;
-            };
-          });
+          playlist();
         } else {
           document.getElementById('formMsg').innerHtml(ret.msg);
         }
     });
   });
 
-  var img = document.getElementById('captcha');
-  img.addEventListener('click', function () {
-    img.src = 'http://localhost/douban_crx_server/api.php?act=captcha&t='+Date.now();
-  });
+  img.addEventListener('click', changeImage);
   // console.log(img);
 });
-document.addEventListener('click', function () {
-  var img = document.getElementById('captcha')
-  console.log(img);
+document.getElementById('startBtn').addEventListener('click', function () {
+  $.get('http://localhost/douban_crx_server/api.php?act=has_login', {}, function (ret) {
+    console.log(ret);
+    if (console.log(ret.code == 0)) {
+      playlist();
+    } else {
+      document.getElementById('loginPage').style.display = 'block';
+      changeImage();
+    }
+  });
 });
 

@@ -21,7 +21,7 @@ function _req($key = null, $default = null)
 
 function echo_json($code = 0, $extra = null)
 {
-    $arr['code'] = $code;
+    $arr['code'] = intval($code);
     if ($code) {
         $arr['msg'] = $extra;
     } else {

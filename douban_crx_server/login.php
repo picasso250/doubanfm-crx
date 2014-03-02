@@ -37,5 +37,6 @@ if ($ret['r'] != 0) {
     echo_json(1, $ret['err_msg']);
     exit();
 }
+$_SESSION['ses_has_login'] = 1;
 
 echo json_encode(array('code' => 0, 'data' => $ret['user_info']));
